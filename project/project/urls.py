@@ -22,6 +22,11 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', register.SignUpView.as_view(), name='signup'),
     path('accounts/signup/individual/', individual.IndividualSignUpView.as_view(), name='individual_signup'),
-    path('profile', individual.IndividualProfileView, name='individual_profile'),
+    path('accounts/signup/institution/', institution.InstitutionSignUpView.as_view(), name='institution_signup'),
+    path('individual_profile', individual.IndividualProfileView, name='individual_profile'),
+    path('institution_profile', institution.InstitutionProfileView, name='institution_profile'),
     path('ajax/load-cities/', individual.load_cities, name='ajax_load_cities'),
+    path('individual_dashboard', individual.IndividualDashboardView, name='individual_dashboard'),
+    path('institution_dashboard', institution.InstitutionDashboardView, name='institution_dashboard'),
+    path('accounts/signup/institution/', institution.InstitutionSignUpView.as_view(), name='institution_signup'),
 ]
