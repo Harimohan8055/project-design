@@ -24,12 +24,18 @@ class User(AbstractUser):
 
 
 class IndividualProfile(models.Model):
+    TYPE=(
+        ('0','Student'),
+        ('1','Professional'),
+        ('2','Other'),
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     college = models.CharField(max_length=50)
     contact = models.CharField(max_length=15)
     location = models.CharField(max_length=15)
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    type = models.CharField(max_length=50, choices=TYPE)
 
     def __str__(self):
         return self.user.username

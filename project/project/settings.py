@@ -127,3 +127,5 @@ STATIC_URL = '/static/'
 
 
 AUTH_USER_MODEL = 'techei.User'
+
+LOGIN_REDIRECT_URL = 'home/'
