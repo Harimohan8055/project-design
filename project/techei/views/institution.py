@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.views.generic import TemplateView
 from django.contrib.auth import login
 from django.views.generic import TemplateView,ListView, CreateView, UpdateView
 from django.http import HttpResponse
@@ -6,11 +7,12 @@ from ..models import User,IndividualProfile,InstitutionProfile,City,State
 from django.urls import reverse_lazy
 from ..forms import InstitutionProfileForm,InstitutionSignUpForm
 
+# Create your views here.
 
 class InstitutionSignUpView(CreateView):
     model = User
     form_class = InstitutionSignUpForm
-    template_name = 'individual/signup_form.html'
+    template_name = 'institution/signup_form.html'
 
     def get_context_data(self, **kwargs):
         kwargs['user_type'] = 'Institution'
@@ -33,7 +35,7 @@ def InstitutionProfileView(request):
 
     else:
         form = InstitutionProfileForm()
-    return render(request, "individual/profile.html",{"form":form})
+    return render(request, "institution/profile.html",{"form":form})
 
 def load_cities(request):
     state_id = request.GET.get('state')

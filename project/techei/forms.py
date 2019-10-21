@@ -34,10 +34,10 @@ class IndividualSignUpForm(UserCreationForm):
 
 class IndividualProfileForm(forms.ModelForm):
     type=forms.CharField(label='User Type', widget=forms.Select(choices=TYPE))
-    
+
     class Meta:
         model = IndividualProfile
-        fields = ('college','contact','location','state' ,'city','type',)
+        fields = ('college','contact','location','state' ,'city','type','age',)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['city'].queryset = City.objects.none()
@@ -53,8 +53,6 @@ class IndividualProfileForm(forms.ModelForm):
 
 
 class InstitutionSignUpForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
-    last_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
 
     class Meta:
@@ -63,7 +61,6 @@ class InstitutionSignUpForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_institution = True
-        user.is_active = False
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
