@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User,IndividualProfile,City,State,InstitutionProfile
+from .models import User,IndividualProfile,City,State,InstitutionProfile,EventModel,FestClubModel,FestImage
 from django.forms.utils import ValidationError
+from django.db import models
 
 TYPE=[
     ('','------Select-----'),
@@ -86,3 +87,34 @@ class InstitutionProfileForm(forms.ModelForm):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:
             self.fields['city'].queryset = self.instance.country.city_set.order_by('name')
+
+
+class AddEventForm(forms.ModelForm):
+    class Meta:
+        model = EventModel
+        fields = ('title', 'description', 'venue', 'address', 'time', 'start_date', 'end_date', 'seats' ,'fee' ,'prize', 'paylink', 'fest', 'state', 'city', 'category', 'attendee_type')
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['city'].queryset = City.objects.none()
+
+            if 'state' in self.data:
+                try:
+                    state_id = int(self.data.get('state'))
+                    self.fields['city'].queryset = City.objects.filter(state_id=state_id).order_by('name')
+                except (ValueError, TypeError):
+                    pass  # invalid input from the client; ignore and fallback to empty City queryset
+            elif self.instance.pk:
+                self.fields['city'].queryset = self.instance.country.city_set.order_by('name')
+
+class AddFestClubForm(forms.ModelForm):
+
+    class Meta:
+        model = FestClubModel
+        fields = ('name', 'description')
+
+
+
+class FestImageForm(forms.ModelForm):
+    class Meta:
+        model = FestImage
+        fields = ('name', )

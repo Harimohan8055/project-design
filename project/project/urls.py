@@ -16,10 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from techei.views import register,institution,individual
+from django.conf import settings
+from django.conf.urls import url
+from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', register.HomeView.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('techei/', include('techei.urls')),
     path('accounts/signup/', register.SignUpView.as_view(), name='signup'),
     path('accounts/login/', register.LoginView.as_view(), name='login'),
     path('accounts/login/home/', register.HomeView.as_view(), name='home'),
@@ -31,4 +36,4 @@ urlpatterns = [
     path('individual_dashboard', individual.IndividualDashboardView, name='individual_dashboard'),
     path('institution_dashboard', institution.InstitutionDashboardView, name='institution_dashboard'),
     path('accounts/signup/institution/', institution.InstitutionSignUpView.as_view(), name='institution_signup'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -46,7 +46,7 @@
                   <div class="card-heading"></div>
                   <div class="card-body">
                       <h2 class="title">Complete Your Profile</h2>
-                      <form method="POST" id="profileForm" data-cities-url="{% url 'ajax_load_cities' %}" novalidate>{% csrf_token %}
+                      <form method="POST" id="addevent" data-cities-url="{% url 'ajax_load_cities' %}" novalidate>{% csrf_token %}
                           <input type="hidden" name="next" value="{{next}}">
                           <div class="input-group">
                               <input class="input--style-2" type="text" placeholder="Institution/Company Name" name="institutionname" id="id_institutionname" maxlength="50">
@@ -76,7 +76,7 @@
 
                                           <div class="select-dropdown"></div>
                                       </div>
-                                  </div>
+                                  </div>-
                               </div>
                           </div> -->
                           <!-- <div class="input-group">
@@ -108,7 +108,7 @@
       <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
       <script>
         $("#id_state").change(function () {
-          var url = $("#profileForm").attr("data-cities-url");
+          var url = $("#addevent").attr("data-cities-url");
           var stateId = $(this).val();
 
           $.ajax({

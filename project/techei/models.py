@@ -1,8 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import uuid
+import os
+
 
 
 # Create your models here.
+
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('fest/', filename)
 
 class State(models.Model):
     name = models.CharField(max_length=30)
@@ -50,6 +58,57 @@ class InstitutionProfile(models.Model):
     regno = models.IntegerField()
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    rating = models.IntegerField(null=True)
 
     def __str__(self):
         return self.user.username
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=30)
+    def __str__(self):
+        return self.name
+
+class FestClubModel(models.Model):
+    name = models.CharField(max_length=30)
+    description = models.TextField(null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+
+
+class EventModel(models.Model):
+    ATYPE=(
+        (0,'Student'),
+        (1,'Professional'),
+        (2,'Other'),
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=15)
+    description = models.TextField(max_length=200)
+    venue = models.CharField(max_length=15)
+    address = models.TextField(max_length=200)
+    time = models.TimeField(max_length=15)
+    start_date = models.DateField(max_length=15)
+    end_date = models.DateField(max_length=15)
+    seats = models.IntegerField()
+    fee = models.IntegerField(null=True)
+    prize = models.IntegerField(null=True)
+    paylink = models.CharField(null=True,max_length=30)
+    fest = models.ForeignKey(FestClubModel, on_delete=models.CASCADE)
+    state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    attendee_type = models.IntegerField(choices=ATYPE)
+    event_type = models.IntegerField()
+
+    def __str__(self):
+        return self.title
+
+class FestImage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fest = models.ForeignKey(FestClubModel, on_delete=models.CASCADE)
+    name = models.ImageField(upload_to=get_file_path ,max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.name

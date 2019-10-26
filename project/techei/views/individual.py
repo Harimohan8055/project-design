@@ -29,7 +29,7 @@ def IndividualProfileView(request):
             profile = form.save(commit = False)
             profile.user_id=request.user.id
             profile.save()
-            return redirect('/individual_dashboard')
+            return redirect('/')
 
     else:
         form = IndividualProfileForm()
@@ -42,4 +42,4 @@ def load_cities(request):
 
 
 def IndividualDashboardView(request):
-    return HttpResponse('<h1>Individual</h1>')
+    return render(request,'individual/individual_home.html')

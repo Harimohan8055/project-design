@@ -1,5 +1,7 @@
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
+from django.contrib.auth import login
+from django.urls import reverse_lazy
 
 
 class SignUpView(TemplateView):
