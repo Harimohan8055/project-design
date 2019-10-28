@@ -1,8 +1,10 @@
 {% extends 'institution_base.html' %}
-
+{% load static %}
 {% block content %}
+
+
 <section class="home-slider owl-carousel">
-      <div class="slider-item" style="background-image:url(images/bg_1.jpg);">
+      <div class="slider-item" style="background-image:url(/static/techei/dash/images/bg_1.jpg);">
       	<div class="overlay"></div>
         <div class="container">
           <div class="row no-gutters slider-text align-items-center justify-content-start" data-scrollax-parent="true">
@@ -80,6 +82,75 @@
   </div>
 </section>
 
+{% if user.is_individual or not user.is_authenticated%}
+
+<section class="ftco-section">
+      <div class="container-fluid px-4">
+        <div class="row justify-content-center mb-5 pb-2">
+          <div class="col-md-8 text-center heading-section ftco-animate">
+            <h2 class="mb-4"><span>Upcoming</span> Events</h2>
+            <!-- <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p> -->
+          </div>
+        </div>
+        </div>
+      </section>
+
+
+    <section>
+          <div class="container-fluid p-sm-0">
+            <div class="row featured-post-slider">
+            {% for up in upcoming %}
+
+            <div class="col-md-3 course ftco-animate">
+              {% for a in ueimg %}
+                {% for b in a|slice:":1" %}
+                  {% if b.event_id == up.id %}
+                  <div class="img" style="background-image: url({{ b.name.url }});"></div>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+
+              <div class="text pt-4">
+                <p class="meta d-flex">
+                  {% for a in einst %}
+                    {% for b in a|slice:":1" %}
+                      {% if b.user_id == up.user_id and not i%}
+                        <span><i class="icon-user mr-2"></i>{{b.institutionname}}</span>
+                      {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+                  <span><i class="icon-table mr-2"></i>{{ up.seats }}</span>
+                  <span><i class="icon-calendar mr-2"></i>{{ up.start_date }}</span>
+                </p>
+                <h3><a href="#">{{up.title}}</a></h3>
+                <!-- <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p> -->
+                <p><a href="{% url 'apply_event' event_id=up.id  %}" class="btn btn-primary">Apply now</a></p>
+              </div>
+            </div>
+            
+              {% endfor %}
+
+              <div class="col-md-3 course ftco-animate">
+                <div class="img" style="background-image: url(/static/techei/dash/images/more.png);"></div>
+                <div class="text pt-4">
+                  <p class="meta d-flex">
+                    <span><i class=" mr-2"></i></span>
+                    <span><i class=" mr-2"></i></span>
+                    <span><i class=" mr-2"></i></span>
+                  </p>
+                  <h3><a href="#">Explore All</a></h3>
+                  <!-- <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p> -->
+                  <p><a href="#" class="btn btn-primary">Apply now</a></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+{% endif %}
+
+{% if not user.is_authenticated %}
 <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url(images/bg_3.jpg);" data-stellar-background-ratio="0.5">
     	<div class="container">
     		<div class="row justify-content-center mb-5 pb-2 d-flex">
@@ -143,83 +214,123 @@
     	</div>
     </section>
 
-    <section class="ftco-section bg-light">
-			<div class="container">
-				<div class="row justify-content-center mb-5 pb-2">
-          <div class="col-md-8 text-center heading-section ftco-animate">
-            <h2 class="mb-4"><span>Recent</span> Blog</h2>
-            <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p>
+{% endif %}
+
+
+{% if user.is_authenticated and user.is_individual %}
+
+<section class="ftco-section">
+  <div class="container-fluid px-4">
+    <div class="row justify-content-center mb-5 pb-2">
+      <div class="col-md-8 text-center heading-section ftco-animate">
+        <h2 class="mb-4"><span>Events </span> Around Me</h2>
+        <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+
+<section>
+      <div class="container-fluid p-sm-0">
+        <div class="row featured-post-slider">
+
+
+          {% for ev in event %}
+
+          <div class="col-md-3 course ftco-animate">
+            {% for a in eimg %}
+              {% for b in a|slice:":1" %}
+                {% if b.event_id == ev.id %}
+                <div class="img" style="background-image: url({{ b.name.url }});"></div>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+
+            <div class="text pt-4">
+              <p class="meta d-flex">
+                {% for a in inst %}
+                  {% for b in a|slice:":1" %}
+                    {% if b.user_id == ev.user_id and not i%}
+                      <span><i class="icon-user mr-2"></i>{{b.institutionname}}</span>
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+                <span><i class="icon-table mr-2"></i>{{ ev.seats }}</span>
+                <span><i class="icon-calendar mr-2"></i>{{ ev.start_date }}</span>
+              </p>
+              <h3><a href="#">{{ev.title}}</a></h3>
+              <!-- <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p> -->
+              <p><a href="{% url 'apply_event' event_id=ev.id  %}" class="btn btn-primary">Apply now</a></p>
+            </div>
           </div>
+
+
+          {% endfor %}
+
+
+          <div class="col-md-3 course ftco-animate">
+            <div class="img" style="background-image: url(/static/techei/dash/images/more.png);"></div>
+            <div class="text pt-4">
+              <p class="meta d-flex">
+                <span><i class=" mr-2"></i></span>
+                <span><i class=" mr-2"></i></span>
+                <span><i class=" mr-2"></i></span>
+              </p>
+              <h3><a href="#">Explore All</a></h3>
+              <!-- <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p> -->
+              <p><a href="#" class="btn btn-primary">Apply now</a></p>
+            </div>
+          </div>
+
+          <div class="col-md-3 course ftco-animate">
+            <div class="img" style="background-image: url(/static/techei/dash/images/more.png);"></div>
+            <div class="text pt-4">
+              <p class="meta d-flex">
+                <span><i class=" mr-2"></i></span>
+                <span><i class=" mr-2"></i></span>
+                <span><i class=" mr-2"></i></span>
+              </p>
+              <h3><a href="#">Explore All</a></h3>
+              <!-- <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p> -->
+              <p><a href="#" class="btn btn-primary">Apply now</a></p>
+            </div>
+          </div>
+
+          <div class="col-md-3 course ftco-animate">
+            <div class="img" style="background-image: url(/static/techei/dash/images/more.png);"></div>
+            <div class="text pt-4">
+              <p class="meta d-flex">
+                <span><i class=" mr-2"></i></span>
+                <span><i class=" mr-2"></i></span>
+                <span><i class=" mr-2"></i></span>
+              </p>
+              <h3><a href="#">Explore All</a></h3>
+              <!-- <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p> -->
+              <p><a href="#" class="btn btn-primary">Apply now</a></p>
+            </div>
+          </div>
+
+          <div class="col-md-3 course ftco-animate">
+            <div class="img" style="background-image: url(/static/techei/dash/images/more.png);"></div>
+            <div class="text pt-4">
+              <p class="meta d-flex">
+                <span><i class=" mr-2"></i></span>
+                <span><i class=" mr-2"></i></span>
+                <span><i class=" mr-2"></i></span>
+              </p>
+              <h3><a href="#">Explore All</a></h3>
+              <!-- <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p> -->
+              <p><a href="#" class="btn btn-primary">Apply now</a></p>
+            </div>
+          </div>
+
+
+
         </div>
-				<div class="row">
-          <div class="col-md-6 col-lg-4 ftco-animate">
-            <div class="blog-entry">
-              <a href="blog-single.html" class="block-20 d-flex align-items-end" style="background-image: url('images/image_1.jpg');">
-								<div class="meta-date text-center p-2">
-                  <span class="day">26</span>
-                  <span class="mos">June</span>
-                  <span class="yr">2019</span>
-                </div>
-              </a>
-              <div class="text bg-white p-4">
-                <h3 class="heading"><a href="#">Skills To Develop Your Child Memory</a></h3>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                <div class="d-flex align-items-center mt-4">
-	                <p class="mb-0"><a href="#" class="btn btn-primary">Read More <span class="ion-ios-arrow-round-forward"></span></a></p>
-	                <p class="ml-auto mb-0">
-	                	<a href="#" class="mr-2">Admin</a>
-	                	<a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-	                </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 ftco-animate">
-            <div class="blog-entry">
-              <a href="blog-single.html" class="block-20 d-flex align-items-end" style="background-image: url('images/image_2.jpg');">
-								<div class="meta-date text-center p-2">
-                  <span class="day">26</span>
-                  <span class="mos">June</span>
-                  <span class="yr">2019</span>
-                </div>
-              </a>
-              <div class="text bg-white p-4">
-                <h3 class="heading"><a href="#">Skills To Develop Your Child Memory</a></h3>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                <div class="d-flex align-items-center mt-4">
-	                <p class="mb-0"><a href="#" class="btn btn-primary">Read More <span class="ion-ios-arrow-round-forward"></span></a></p>
-	                <p class="ml-auto mb-0">
-	                	<a href="#" class="mr-2">Admin</a>
-	                	<a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-	                </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 ftco-animate">
-            <div class="blog-entry">
-              <a href="blog-single.html" class="block-20 d-flex align-items-end" style="background-image: url('images/image_3.jpg');">
-								<div class="meta-date text-center p-2">
-                  <span class="day">26</span>
-                  <span class="mos">June</span>
-                  <span class="yr">2019</span>
-                </div>
-              </a>
-              <div class="text bg-white p-4">
-                <h3 class="heading"><a href="#">Skills To Develop Your Child Memory</a></h3>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                <div class="d-flex align-items-center mt-4">
-	                <p class="mb-0"><a href="#" class="btn btn-primary">Read More <span class="ion-ios-arrow-round-forward"></span></a></p>
-	                <p class="ml-auto mb-0">
-	                	<a href="#" class="mr-2">Admin</a>
-	                	<a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-	                </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-			</div>
-		</section>
+      </div>
+    </section>
+
+{% endif %}
 
 {% endblock %}

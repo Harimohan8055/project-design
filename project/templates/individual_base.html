@@ -99,7 +99,12 @@
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav mr-auto">
 	        	<li class="nav-item active"><a href="{% url 'home' %}" class="nav-link pl-0">Home</a></li>
+            {% if user.is_institution %}
             <li class="nav-item"><a href="{% url 'event_type' %}" class="nav-link">Events</a></li>
+            {% endif %}
+            {% if user.is_individual %}
+            <li class="nav-item"><a href="{% url 'event_type' %}" class="nav-link">Events</a></li>
+            {% endif %}
 	        	<li class="nav-item"><a href="courses.html" class="nav-link">Internships</a></li>
             <li class="nav-item"><a href="courses.html" class="nav-link">Activity</a></li>
             <li class="nav-item"><a href="{% url 'add_fest' %}" class="nav-link">Fest/Clubs</a></li>

@@ -12,6 +12,11 @@ def get_file_path(instance, filename):
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join('fest/', filename)
 
+def get_file_path_event(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('event/', filename)
+
 class State(models.Model):
     name = models.CharField(max_length=30)
     def __str__(self):
@@ -84,17 +89,17 @@ class EventModel(models.Model):
         (2,'Other'),
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=15)
-    description = models.TextField(max_length=200)
-    venue = models.CharField(max_length=15)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    venue = models.CharField(max_length=100)
     address = models.TextField(max_length=200)
     time = models.TimeField(max_length=15)
     start_date = models.DateField(max_length=15)
     end_date = models.DateField(max_length=15)
     seats = models.IntegerField()
-    fee = models.IntegerField(null=True)
-    prize = models.IntegerField(null=True)
-    paylink = models.CharField(null=True,max_length=30)
+    fee = models.IntegerField(null=True,blank=True)
+    prize = models.IntegerField(null=True,blank=True)
+    paylink = models.CharField(null=True,max_length=100,blank=True)
     fest = models.ForeignKey(FestClubModel, on_delete=models.CASCADE)
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
@@ -112,3 +117,30 @@ class FestImage(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class EventImage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event = models.ForeignKey(EventModel, on_delete=models.CASCADE)
+    name = models.ImageField(upload_to=get_file_path_event ,max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+class ApplyEventModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, editable=False)
+    event = models.ForeignKey(EventModel, on_delete=models.CASCADE,blank=True, editable=False)
+    is_confirm = models.BooleanField(default=False,blank=True, editable=False)
+
+    def __str__(self):
+        return self.name
+
+
+class SeatsEventModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, editable=False)
+    event = models.OneToOneField(EventModel, on_delete=models.CASCADE,blank=True, editable=False)
+    total_seats = models.IntegerField(blank=True, editable=False)
+    available_seats=models.IntegerField(blank=True, editable=False)
+
+    def __str__(self):
+        return str(self.total_seats)

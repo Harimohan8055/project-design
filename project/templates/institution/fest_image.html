@@ -35,9 +35,8 @@
     <div class="page-wrapper bg-dark p-t-100 p-b-50">
         <div class="wrapper wrapper--w900">
             <div class="card card-6">
-
+              <form method="POST" id="event" enctype="multipart/form-data">  {% csrf_token %}
                 <div class="card-body">
-                    <form method="POST" id="event" enctype="multipart/form-data">  {% csrf_token %}
                       <input type="hidden" name="next" value="{{ next }}">
                       <div class="form-row">
                          <div class="name">Upload Images</div>

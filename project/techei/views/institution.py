@@ -3,9 +3,9 @@ from django.views.generic import TemplateView
 from django.contrib.auth import login
 from django.views.generic import TemplateView,ListView, CreateView, UpdateView
 from django.http import HttpResponse
-from ..models import User,IndividualProfile,InstitutionProfile,City,State,EventModel,FestClubModel,FestImage
+from ..models import User,IndividualProfile,InstitutionProfile,City,State,EventModel,ApplyEventModel,FestClubModel,FestImage,EventImage,SeatsEventModel
 from django.urls import reverse_lazy
-from ..forms import InstitutionProfileForm,InstitutionSignUpForm,AddEventForm,AddFestClubForm,FestImageForm
+from ..forms import InstitutionProfileForm,InstitutionSignUpForm,AddEventForm,AddFestClubForm,FestImageForm,EventImageForm,SeatsEventForm
 
 # Create your views here.
 
@@ -50,23 +50,6 @@ def InstitutionDashboardView(request):
 class EventType(TemplateView):
     template_name = 'institution/event_type.html'
 
-# class AddEvent(CreateView):
-#     model = EventModel
-#     form_class = AddEventForm
-#     template_name = 'institution/addevent.html'
-#
-#     def get_context_data(self, **kwargs):
-#         kwargs['type'] = self.type
-#         return super().get_context_data(**kwargs)
-#
-#     def form_valid(self, form):
-#         event = form.save(commit = False)
-#         event.user_id=request.user.id
-#         event.type=self.type
-#         event.save()
-#         return redirect('/institution_dashboard')
-
-
 
 def AddEvent(request, type):
     uid=request.user.id
@@ -74,24 +57,41 @@ def AddEvent(request, type):
     print("hiii")
     if request.method == "POST":
         form=AddEventForm(request.POST)
+        sform=SeatsEventForm(request.POST)
         if form.is_valid() :
             event = form.save(commit = False)
             event.user_id=request.user.id
             event.event_type=type
             event.save()
-            return redirect('/institution_dashboard')
+            request.session['event_id'] = event.id
+            if sform.is_valid():
+                seat=sform.save(commit = False)
+                seat.event_id=event.id
+                seat.total_seats=event.seats
+                seat.available_seats=event.seats
+                seat.user_id=request.user.id
+                seat.save()
+                return redirect('/techei/eventimage/')
         else:
             print(form.errors)
+            print(sform.errors)
     else:
         form = AddEventForm()
-    return render(request, "institution/addevent.html",{"form":form,"type":type,"fest":fe})
+        sform=SeatsEventForm()
+    return render(request, "institution/addevent.html",{"form":form,"sform":sform ,"type":type,"fest":fe})
 
 
 
 def AddFestClubView(request):
     uid=request.user.id
-    fest_club=FestClubModel.objects.filter(user_id=uid)
-    feimg=FestImage.objects.filter(user_id=uid).distinct()
+    #fest_club=FestClubModel.objects.filter(user_id=uid)
+
+    feimg=FestImage.objects.filter(user_id=uid)
+
+
+    # for a in fest_club:
+    #
+    #     fim.append(feimg
     if request.method == "POST":
         form=AddFestClubForm(request.POST)
         if form.is_valid() :
@@ -102,20 +102,9 @@ def AddFestClubView(request):
             return redirect('/techei/festimage/')
     else:
         form = AddFestClubForm()
-    return render(request, "institution/addfestclub.html",{"form":form, "fecl": fest_club, "fim":feimg})
-
-# class AddFestClubView(CreateView):
-#     model = FestClubModel
-#     form_class = AddFestClubForm
-#     template_name = 'institution/addfestclub.html'
-#
-#     def form_valid(self, form):
-#
-
-        # return redirect('/festimage')
+    return render(request, "institution/addfestclub.html",{"form":form, "fim":feimg})
 
 
-#
 def FestImageView(request):
     fid=request.session.get('fest_id')
     fimg = FestImage.objects.filter(fest_id=fid)
@@ -123,7 +112,7 @@ def FestImageView(request):
         form=FestImageForm(request.POST,  request.FILES)
         if form.is_valid() :
             count = FestImage.objects.filter(fest_id=fid).count()
-            if count<3:
+            if count<1:
                 festimg = form.save(commit = False)
                 festimg.user_id=request.user.id
                 festimg.fest_id=request.session.get('fest_id')
@@ -131,12 +120,49 @@ def FestImageView(request):
                 return redirect('/techei/festimage/')
             else:
                 return redirect('/techei/festimage/')
-
-
-            # return render((request, 'display_hotel_images.html',
-            #          {'hotel_images' : Hotels}))
-
-
     else:
         form = FestImageForm()
     return render(request, "institution/fest_image.html",{"form":form,'fest_images' : fimg})
+
+
+def EventImageView(request):
+    eid=request.session.get('event_id')
+    eimg = EventImage.objects.filter(event_id=eid)
+    if request.method == "POST":
+        form=EventImageForm(request.POST,  request.FILES)
+        if form.is_valid() :
+            count = EventImage.objects.filter(event_id=eid).count()
+            if count<3:
+                eventimg = form.save(commit = False)
+                eventimg.user_id=request.user.id
+                eventimg.event_id=request.session.get('event_id')
+                eventimg.save()
+                return redirect('/techei/eventimage/')
+            else:
+                return redirect('/techei/eventimage/')
+    else:
+        form = FestImageForm()
+    return render(request, "institution/add_event_image.html",{"form":form,'event_images' : eimg})
+
+def ResponseView(request):
+    uid=request.user.id
+    fes=FestClubModel.objects.filter(user_id=uid)
+    ineve=EventModel.objects.filter(user_id=uid)
+    ureg=[]
+    for ine in ineve:
+        uapp=ApplyEventModel.objects.filter(event_id=ine.id)
+        ureg.append(uapp)
+    # eid=ApplyEventModel.objects.values('event_id').distinct()
+
+
+
+
+    # for f in fes:
+    #     eve=EventModel.objects.filter(fest_id=f.id)
+    #     event.append(eve)
+    # for e in event:
+    #     for ev in e:
+    #         upro=ApplyEventModel.objects.filter(event_id=ev.id)
+    #         use.append(upro)
+    # print(fes[1].name)
+    return render(request, "institution/response.html",{"fest":fes,"ureg":ureg})

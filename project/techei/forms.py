@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User,IndividualProfile,City,State,InstitutionProfile,EventModel,FestClubModel,FestImage
+from .models import SeatsEventModel,User,IndividualProfile,City,State,InstitutionProfile,EventModel,FestClubModel,FestImage,EventImage,ApplyEventModel
 from django.forms.utils import ValidationError
 from django.db import models
 
@@ -118,3 +118,19 @@ class FestImageForm(forms.ModelForm):
     class Meta:
         model = FestImage
         fields = ('name', )
+
+class EventImageForm(forms.ModelForm):
+    class Meta:
+        model = EventImage
+        fields = ('name', )
+
+class ApplyEventForm(forms.ModelForm):
+    class Meta:
+        model = ApplyEventModel
+        fields = '__all__'
+
+
+class SeatsEventForm(forms.ModelForm):
+    class Meta:
+        model = SeatsEventModel
+        fields = '__all__'

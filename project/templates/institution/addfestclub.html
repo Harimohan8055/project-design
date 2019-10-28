@@ -66,19 +66,15 @@
 <h1 class="mb-4">My Fest and Clubs </h1>
 			<div class="container">
 				<div class="row">
-          {% for fc in fecl%}
+          {% for fc in fim%}
           <div class="col-md-6 col-lg-4 ftco-animate">
             <div class="blog-entry">
-              {% for im in fim %}
-                {% if fc.id == im.fest_id %}
-                  <a href="blog-single.html" class="block-20 d-flex align-items-end" style="background-image: url('{{im.name.url}}');">
+                  <a href="blog-single.html" class="block-20 d-flex align-items-end" style="background-image: url('{{fc.name.url}}');">
                   </a>
-                {% endif %}
-              {% endfor %}
               <div class="text bg-white p-4">
-                <h3 class="heading"><a href="#">{{fc.name}}</a></h3>
+                <h3 class="heading"><a href="#">{{fc.fest.name}}</a></h3>
                 <div class="d-flex align-items-center mt-4">
-	                <p class="mb-0"><a href="#" class="btn btn-primary">Events <span class="ion-ios-arrow-round-forward"></span></a></p>
+	                <p class="mb-0"><a href="#" class="btn btn-primary">Events<span class="ion-ios-arrow-round-forward"></span></a></p>
                 </div>
               </div>
             </div>
@@ -86,6 +82,7 @@
           {% endfor %}
 			</div>
 		</section>
+
 
 
 <!-- <div class="row">

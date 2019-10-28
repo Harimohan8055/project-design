@@ -47,7 +47,7 @@
     	<div class="container">
     		<div class="row no-gutters d-flex align-items-center align-items-stretch">
     			<div class="col-md-4 d-flex align-items-center py-4">
-    				<a class="navbar-brand" href="{% url 'home' %}">TechE&I <span></span></a>
+    				<a class="navbar-brand" href="{% url 'home' %}">TechE <span></span></a>
     			</div>
 	    		<div class="col-lg-8 d-block">
 		    		<div class="row d-flex">
@@ -55,7 +55,7 @@
 					    	<div class="icon d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
 					    	<div class="text">
 					    		<span>Email</span>
-						    	<span>teche&i@email.com</span>
+						    	<span>teche@email.com</span>
 						    </div>
 					    </div>
 
@@ -99,11 +99,24 @@
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav mr-auto">
 	        	<li class="nav-item active"><a href="{% url 'home' %}" class="nav-link pl-0">Home</a></li>
-            <li class="nav-item"><a href="{% url 'event_type' %}" class="nav-link">Events</a></li>
-	        	<li class="nav-item"><a href="courses.html" class="nav-link">Internships</a></li>
-            <li class="nav-item"><a href="courses.html" class="nav-link">Activity</a></li>
-            <li class="nav-item"><a href="{% url 'add_fest' %}" class="nav-link">Fest/Clubs</a></li>
-            <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+            {% if user.is_authenticated %}
+              {% if user.is_institution %}
+                <li class="nav-item"><a href="{% url 'event_type' %}" class="nav-link">Events</a></li>
+              {% endif %}
+              {% if user.is_individual %}
+                <li class="nav-item"><a href="#" class="nav-link">Explore</a></li>
+              {% endif %}
+              {% if user.is_institution %}
+                <li class="nav-item"><a href="{% url 'response' %}" class="nav-link">Activity</a></li>
+              {% endif %}
+              {% if user.is_individual %}
+                <li class="nav-item"><a href="#" class="nav-link">Activity</a></li>
+              {% endif %}
+              {% if user.is_institution %}
+                <li class="nav-item"><a href="{% url 'add_fest' %}" class="nav-link">Fest/Clubs</a></li>
+              {% endif %}
+            {% endif %}
+
             <li class="nav-item"><a href="#foo" class="nav-link">Contact</a></li>
 	        </ul>
 	      </div>
@@ -133,10 +146,24 @@
             <div class="ftco-footer-widget mb-5 ml-md-4">
               <h2 class="ftco-heading-2">Links</h2>
               <ul class="list-unstyled">
+                {% if user.is_authenticated %}
                 <li><a href="{% url 'home' %}"><span class="ion-ios-arrow-round-forward mr-2"></span>Home</a></li>
+                {% if user.is_institution %}
                 <li><a href="{% url 'event_type' %}"><span class="ion-ios-arrow-round-forward mr-2"></span>Events</a></li>
-                <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Internships</a></li>
+                {% endif %}
+                {% if user.is_individual %}
+                <li><a href="{% url 'event_type' %}"><span class="ion-ios-arrow-round-forward mr-2"></span>Events</a></li>
+                {% endif %}
+                {% if user.is_institution %}
+                <li><a href="{% url 'add_fest' %}"><span class="ion-ios-arrow-round-forward mr-2"></span>Fest/Clubs</a></li>
+
+                {% endif %}
+                {% if user.is_individual %}
+                <li><a href="{% url 'add_fest' %}"><span class="ion-ios-arrow-round-forward mr-2"></span>Fest/Clubs</a></li>
+                {% endif %}
                 <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Activity</a></li>
+                {% endif %}
+
                 <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>About</a></li>
               </ul>
             </div>
@@ -157,7 +184,7 @@
           <div class="col-md-12 text-center">
 
             <p>
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | TechE&I <i class="icon-heart" aria-hidden="true"></i> by <a href="www.google.co.in" target="_blank">Cryptos</a>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | TechE <i class="icon-heart" aria-hidden="true"></i> by <a href="www.google.co.in" target="_blank">Cryptos</a>
   </p>
           </div>
         </div>

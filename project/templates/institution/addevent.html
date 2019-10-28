@@ -166,6 +166,7 @@
               </div>
             </div>
           </div>
+          {{sform.errors}}
 
 
 <!-- <div class="row">
@@ -174,7 +175,7 @@
     <form method="post" id="event" data-cities-url="{% url 'ajax_load_cities' %}" novalidate>
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ next }}">
-      {{ form.as_table }}
+      {{ sform.as_table }}
       <button type="submit" class="btn btn-success">Sign up</button>
     </form>
   </div>
